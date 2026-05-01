@@ -138,7 +138,7 @@ contract ReportCard {
     
 
     // ═══════════════════════════════════════════════
-    //  VIEW HELPERS  (free to call, no gas)
+    //  VIEW HELPERS  (free to call,, no gas)
     // ═══════════════════════════════════════════════
 
     function getAdmin() public view returns (address) {
