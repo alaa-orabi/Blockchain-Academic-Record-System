@@ -22,4 +22,12 @@ contract ReportCard {
 
 
     
-    
+     // ═══════════════════════════════════════════════
+    //  EVENTS
+    // ═══════════════════════════════════════════════
+
+    event StudentRegistered(address indexed studentAddress, string name);
+    event GradeRecorded(address indexed studentAddress, uint256 grade);
+    event ContractPaused(address indexed by);
+    event ContractResumed(address indexed by);
+    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
