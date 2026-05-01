@@ -31,3 +31,12 @@ contract ReportCard {
     event ContractPaused(address indexed by);
     event ContractResumed(address indexed by);
     event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
+   
+    // ═══════════════════════════════════════════════
+    //  CONSTRUCTOR
+    // ═══════════════════════════════════════════════
+
+    constructor() {
+        owner  = msg.sender; // deployer becomes the admin
+        paused = false;
+    }
