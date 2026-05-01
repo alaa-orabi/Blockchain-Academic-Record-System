@@ -80,3 +80,22 @@ contract ReportCard {
         Student memory s = students[studentAddress]; // copy to memory (saves gas)
         return (s.name, s.grade, s.hasGrade);
     }
+
+
+ // ═══════════════════════════════════════════════
+    //  ADMIN FUNCTIONS  (owner only)
+    // ═══════════════════════════════════════════════
+
+    function addGrade(address studentAddress, uint256 grade)
+        public
+        onlyOwner
+        whenNotPaused
+    {
+        require(students[studentAddress].isRegistered, "Student is not registered");
+        require(grade <= 100, "Grade must be between 0 and 100");
+
+        students[studentAddress].grade    = grade;
+        students[studentAddress].hasGrade = true;
+
+        emit GradeRecorded(studentAddress, grade);
+    }
