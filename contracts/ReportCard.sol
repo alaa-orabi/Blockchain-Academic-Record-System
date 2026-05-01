@@ -7,7 +7,7 @@ contract ReportCard {
     //  STATE VARIABLES
     // ═══════════════════════════════════════════════
 
-    address public owner;  // admin wallet
+    address public admin;  // admin wallet
     bool    public paused; // emergency switch
 
     struct Student {
@@ -21,8 +21,7 @@ contract ReportCard {
     address[] private studentList;                // needed to loop over all students
 
 
-    
-     // ═══════════════════════════════════════════════
+    // ═══════════════════════════════════════════════
     //  EVENTS
     // ═══════════════════════════════════════════════
 
@@ -30,23 +29,23 @@ contract ReportCard {
     event GradeRecorded(address indexed studentAddress, uint256 grade);
     event ContractPaused(address indexed by);
     event ContractResumed(address indexed by);
-    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
-   
+    event OwnershipTransferred(address indexed previousAdmin, address indexed newAdmin);
+
     // ═══════════════════════════════════════════════
     //  CONSTRUCTOR
     // ═══════════════════════════════════════════════
 
     constructor() {
-        owner  = msg.sender; // deployer becomes the admin
+        admin  = msg.sender; // deployer becomes the admin
         paused = false;
     }
- 
+
     // ═══════════════════════════════════════════════
     //  MODIFIERS
     // ═══════════════════════════════════════════════
 
     modifier onlyOwner() {
-        require(msg.sender == owner, "Access denied: owner only");
+        require(msg.sender == admin, "Access denied: admin only");
         _; // run the function body after this check
     }
 
@@ -55,7 +54,7 @@ contract ReportCard {
         _;
     }
 
-     // ═══════════════════════════════════════════════
+    // ═══════════════════════════════════════════════
     //  USER FUNCTIONS  (any wallet can call these)
     // ═══════════════════════════════════════════════
 
@@ -81,9 +80,8 @@ contract ReportCard {
         return (s.name, s.grade, s.hasGrade);
     }
 
-
- // ═══════════════════════════════════════════════
-    //  ADMIN FUNCTIONS  (owner only)
+    // ═══════════════════════════════════════════════
+    //  ADMIN FUNCTIONS  (admin only)
     // ═══════════════════════════════════════════════
 
     function addGrade(address studentAddress, uint256 grade)
@@ -129,20 +127,18 @@ contract ReportCard {
         emit ContractResumed(msg.sender);
     }
 
-    function transferOwnership(address newOwner) public onlyOwner {
-        require(newOwner != address(0), "New owner cannot be the zero address");
-        emit OwnershipTransferred(owner, newOwner); // emit before changing (logs old owner)
-        owner = newOwner;
+    function transferOwnership(address newAdmin) public onlyOwner {
+        require(newAdmin != address(0), "New admin cannot be the zero address");
+        emit OwnershipTransferred(admin, newAdmin); // emit before changing (logs old admin)
+        admin = newAdmin;
     }
 
-    
-
     // ═══════════════════════════════════════════════
-    //  VIEW HELPERS  (free to call,, no gas)
+    //  VIEW HELPERS  (free to call, no gas)
     // ═══════════════════════════════════════════════
 
     function getAdmin() public view returns (address) {
-        return owner; // required by the project spec
+        return admin; // required by the project spec
     }
 
     function getStudentCount() public view returns (uint256) {
