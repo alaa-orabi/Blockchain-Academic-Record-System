@@ -54,3 +54,29 @@ contract ReportCard {
         require(!paused, "System is currently paused");
         _;
     }
+
+     // ═══════════════════════════════════════════════
+    //  USER FUNCTIONS  (any wallet can call these)
+    // ═══════════════════════════════════════════════
+
+    function registerUser(string calldata name) public whenNotPaused {
+        require(!students[msg.sender].isRegistered, "Already registered");
+        require(bytes(name).length > 0, "Name cannot be empty");
+
+        students[msg.sender].name         = name;
+        students[msg.sender].isRegistered = true;
+        studentList.push(msg.sender); // save address so we can loop later
+
+        emit StudentRegistered(msg.sender, name);
+    }
+
+    function getGrade(address studentAddress)
+        public
+        view
+        returns (string memory name, uint256 grade, bool hasGrade)
+    {
+        require(students[studentAddress].isRegistered, "No record found for this address");
+
+        Student memory s = students[studentAddress]; // copy to memory (saves gas)
+        return (s.name, s.grade, s.hasGrade);
+    }
