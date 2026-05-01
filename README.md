@@ -222,7 +222,7 @@ python scripts/6-export_csv.py
 | Walaa Omar | Coin & Advanced Contract Dev | `contracts/GradeToken.sol` |
 | Ahmed Sameh | Deployment Engineer | `scripts/1-deploy.py`, `scripts/2-setup.py`, `shared/` |
 | Mahmoud Sayed | Terminal App Developer | `terminal_app/main.py`, `terminal_app/blockchain_connector.py`, `terminal_app/student_menu.py`, `terminal_app/admin_menu.py` |
-| Mayada Yasser | Data, Testing & System Features | `scripts/3-analysis.py`, `scripts/4-security_test.py`, `scripts/5-alert.py`, `scripts/ل
+| Mayada Yasser | Data, Testing & System Features | `scripts/3-analysis.py`, `scripts/4-security_test.py`, `scripts/5-alert.py`, `scripts/
 
 ---
 
