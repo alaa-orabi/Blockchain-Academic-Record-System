@@ -40,3 +40,17 @@ contract ReportCard {
         owner  = msg.sender; // deployer becomes the admin
         paused = false;
     }
+ 
+    // ═══════════════════════════════════════════════
+    //  MODIFIERS
+    // ═══════════════════════════════════════════════
+
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Access denied: owner only");
+        _; // run the function body after this check
+    }
+
+    modifier whenNotPaused() {
+        require(!paused, "System is currently paused");
+        _;
+    }
