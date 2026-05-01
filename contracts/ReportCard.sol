@@ -99,3 +99,20 @@ contract ReportCard {
 
         emit GradeRecorded(studentAddress, grade);
     }
+
+    function batchAddGrades(
+        address[] memory studentAddresses,
+        uint256[]  memory grades
+    ) public onlyOwner whenNotPaused {
+        require(studentAddresses.length == grades.length, "Address and grade lists must be the same length");
+
+        for (uint256 i = 0; i < studentAddresses.length; i++) { // loop through both arrays
+            require(students[studentAddresses[i]].isRegistered, "One or more students are not registered");
+            require(grades[i] <= 100, "Grade must be between 0 and 100");
+
+            students[studentAddresses[i]].grade    = grades[i];
+            students[studentAddresses[i]].hasGrade = true;
+
+            emit GradeRecorded(studentAddresses[i], grades[i]);
+        }
+    }
