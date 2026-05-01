@@ -116,3 +116,21 @@ contract ReportCard {
             emit GradeRecorded(studentAddresses[i], grades[i]);
         }
     }
+
+    function pause() public onlyOwner {
+        require(!paused, "Already paused");
+        paused = true;
+        emit ContractPaused(msg.sender);
+    }
+
+    function resume() public onlyOwner {
+        require(paused, "Not currently paused");
+        paused = false;
+        emit ContractResumed(msg.sender);
+    }
+
+    function transferOwnership(address newOwner) public onlyOwner {
+        require(newOwner != address(0), "New owner cannot be the zero address");
+        emit OwnershipTransferred(owner, newOwner); // emit before changing (logs old owner)
+        owner = newOwner;
+    }
