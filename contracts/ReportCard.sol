@@ -134,3 +134,23 @@ contract ReportCard {
         emit OwnershipTransferred(owner, newOwner); // emit before changing (logs old owner)
         owner = newOwner;
     }
+
+    
+
+    // ═══════════════════════════════════════════════
+    //  VIEW HELPERS  (free to call, no gas)
+    // ═══════════════════════════════════════════════
+
+    function getAdmin() public view returns (address) {
+        return owner; // required by the project spec
+    }
+
+    function getStudentCount() public view returns (uint256) {
+        return studentList.length;
+    }
+
+    function getStudentAt(uint256 index) public view returns (address) {
+        require(index < studentList.length, "Index out of range");
+        return studentList[index];
+    }
+}
