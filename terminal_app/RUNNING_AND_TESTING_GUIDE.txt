@@ -1,0 +1,322 @@
+================================================================================
+  REPORT CARD BLOCKCHAIN APP — COMPLETE RUNNING & TESTING GUIDE
+================================================================================
+
+────────────────────────────────────────────────────────────────────────────────
+  PART 1 — FIRST-TIME SETUP (do this once)
+────────────────────────────────────────────────────────────────────────────────
+
+  STEP 1 — Activate your virtual environment (if you made one)
+  ─────────────────────────────────────────────────────────────
+  Windows (PowerShell):
+      venv\Scripts\activate
+
+  You should see (venv) appear at the start of your terminal line.
+  Skip this step if you installed packages globally.
+
+
+  STEP 2 — Install Python packages
+  ──────────────────────────────────
+      pip install web3 py-solc-x
+
+
+  STEP 3 — Install Ganache (only once, needs Node.js)
+  ─────────────────────────────────────────────────────
+      npm install -g ganache
+
+
+================================================================================
+  PART 2 — EVERY TIME YOU WORK ON THE PROJECT
+================================================================================
+
+  Do these steps in order EVERY time you start a new session.
+
+
+  STEP 1 — Open Terminal 1 and start Ganache (leave it running)
+  ──────────────────────────────────────────────────────────────
+      ganache --deterministic --accounts 10
+
+  You will see 10 wallet addresses and "Listening on 127.0.0.1:8545".
+  DO NOT close this terminal. It must stay open the whole time.
+
+
+  STEP 2 — Open Terminal 2 and go to your project folder
+  ────────────────────────────────────────────────────────
+      cd path\to\your\project
+
+
+  STEP 3 — Deploy the contracts
+  ──────────────────────────────
+      python scripts/1-deploy.py
+
+  Expected output:
+      Connected to Ganache  |  Chain ID: 1337
+      Admin (deployer): 0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1
+      Compiling ReportCard.sol ...
+      Deploying ReportCard ...
+        ReportCard deployed at:  0xe78A0F...
+      Compiling GradeCoin.sol ...
+      Deploying GradeCoin ...
+        GradeCoin deployed at:   0x5b1869...
+      Deployment complete!
+
+
+  STEP 4 — Seed fake student data
+  ─────────────────────────────────
+      python scripts/2-setup.py
+
+  Expected output:
+      Registered: Ali Hassan    (0xFFcf8F...)
+      Registered: Sara Khalid   (0x22d491...)
+      Registered: Omar Youssef  (0xE11BA2...)
+      Registered: Nour Ibrahim  (0xd03ea8...)
+      Grade 88 → Ali Hassan
+      Grade 95 → Sara Khalid
+      Grade 72 → Omar Youssef
+      Grade 80 → Nour Ibrahim
+      Minted 50 GRC → Ali Hassan
+      ...
+      Total students registered: 4
+      Total GradeCoins minted:   225 GRC
+      Setup complete!
+
+
+  STEP 5 — Launch the terminal app
+  ──────────────────────────────────
+      python terminal_app/main.py
+
+  You will see the banner, then a numbered list of 10 Ganache accounts.
+
+
+================================================================================
+  PART 3 — TESTING THE TERMINAL APP (what to do and what to expect)
+================================================================================
+
+  ── ACCOUNT SELECTION ──────────────────────────────────────────────────────────
+
+  When the app starts it shows all 10 accounts with their ETH balances.
+  Account 0 is marked [Admin].
+
+  Type 0  → you act as Admin
+  Type 1  → you act as Ali Hassan (student)
+  Type 2  → Sara Khalid
+  Type 3  → Omar Youssef
+  Type 4  → Nour Ibrahim
+
+  Accounts 5–9 are unregistered wallets (useful for testing registration).
+
+
+  ── TEST 1: STUDENT REGISTRATION (new user) ────────────────────────────────────
+
+  1. Start the app and select account 5 (unregistered).
+  2. The app detects you are not registered and asks:
+       "Register now? (y/n)"
+  3. Type  y  then enter any name e.g. "Test Student"
+  4. Expected: "✔  Registered as 'Test Student'!"
+  5. Go to Student Portal → View my grade → you should see your name but no
+     grade yet (the admin hasn't assigned one).
+
+
+  ── TEST 2: VIEW GRADE (registered student) ─────────────────────────────────────
+
+  1. Select account 1 (Ali Hassan).
+  2. Go to Student Portal → [1] View my grade.
+  3. Expected output:
+       Name  : Ali Hassan
+       Grade :  88/100  ████████████████████░░░░
+       Good work!
+
+
+  ── TEST 3: BALANCE CHECKER ─────────────────────────────────────────────────────
+
+  1. Student Portal → [2] Check coin & ETH balance.
+  2. Paste any account address when prompted (e.g. account 1).
+  3. Expected output:
+       Token                    Balance
+       ──────────────────────────────────────────
+       GradeCoin (GRC)              50.0000  GRC
+       Ether (ETH)                 999.xxxx  ETH
+
+
+  ── TEST 4: ACTIVITY HISTORY ────────────────────────────────────────────────────
+
+  1. Student Portal → [3] My activity history.
+  2. Press Enter to use your own address.
+  3. The app scans every block and prints a table like:
+       Block   Tx Hash           Action                             ETH Value
+       ─────────────────────────────────────────────────────────────────────
+       2       0x3f9a12…    Registered name on ReportCard        0.0000 ETH
+       5       0x7c2b44…    Interacted with ReportCard           0.0000 ETH
+
+
+  ── TEST 5: CLASS DATA HISTORY REPORT ───────────────────────────────────────────
+
+  1. Student Portal → [4] Class data history report.
+  2. Expected: a full table of all students, their grades, and a progress bar.
+     Class average is printed at the bottom.
+       #    Name                Address                                     Grade
+       ─────────────────────────────────────────────────────────────────────────
+       1    Ali Hassan          0xFFcf8F...                                   88
+       2    Sara Khalid         0x22d491...                                   95
+       ...
+       Class average: 83.8
+
+
+  ── TEST 6: ADMIN — ADD GRADE ────────────────────────────────────────────────────
+
+  1. Select account 0 (Admin) from the main menu.
+  2. Go to Admin Panel → enter password:  admin123
+  3. Choose [1] Add grade for a student.
+  4. Paste account 5's address (the student you registered in Test 1).
+  5. Enter grade: 76
+  6. Expected: "✔  Grade 76 recorded for 0x..."
+  7. Switch to account 5 → Student Portal → View my grade → now shows 76.
+
+
+  ── TEST 7: BATCH ADD GRADES ─────────────────────────────────────────────────────
+
+  1. Admin Panel → [2] Batch-add grades.
+  2. Enter 2–3 student addresses and grades one by one.
+  3. Confirm with  y.
+  4. Expected: "✔  Batch of X grades recorded successfully."
+
+
+  ── TEST 8: MINT GRADECOINS ──────────────────────────────────────────────────────
+
+  1. Admin Panel → [3] Mint GradeCoins to a student.
+  2. Enter account 5's address and amount: 100
+  3. Expected: "✔  Minted 100.0 GRC → 0x..."
+  4. Verify: Student Portal → Balance Checker → paste account 5's address.
+     GRC balance should now be 100.
+
+
+  ── TEST 9: ADMIN DASHBOARD ──────────────────────────────────────────────────────
+
+  1. Admin Panel → [5] Dashboard.
+  2. Expected summary:
+       Admin            : 0x90F8bf...
+       Paused           : No ✅
+       Students on file : 5
+       GRC total supply : 325.00 GRC
+       Total transactions : 20+
+       Top 3 Most Active Addresses:
+         1   0x90F8bf...   12
+         2   0xFFcf8F...    3
+         ...
+       Class average: 83.8
+
+
+  ── TEST 10: PAUSE AND RESUME ────────────────────────────────────────────────────
+
+  1. Admin Panel → [6] Pause the contract → confirm y.
+  2. Expected: "✔  Contract is now paused ⛔"
+  3. Switch to any student account → try to register a new user.
+  4. Expected: transaction reverts with "System is currently paused".
+  5. Go back to Admin Panel → [6] Resume → confirm y.
+  6. Expected: "✔  Contract is now resumed ✅"
+  7. Student registration works again.
+
+
+  ── TEST 11: OWNERSHIP TRANSFER SECURITY DEMO ────────────────────────────────────
+
+  1. Admin Panel → [8] Run ownership-transfer security demo.
+  2. The script runs automatically. Expected output:
+       [1] addGrade from original admin        → PASS ✔
+       [2] Ownership transferred to new admin  → DONE ✔
+       [3] addGrade from OLD admin (fail)      → PASS ✔
+       [4] addGrade from NEW admin (pass)      → PASS ✔
+       ✔  All 4 steps passed. Ownership transfer works correctly.
+
+  NOTE: After this test, account 1 becomes the new admin.
+  Switch to account 1 and use the Admin Panel going forward.
+
+
+  ── TEST 12: TRANSFER GRADECOINS (student to student) ────────────────────────────
+
+  1. Log in as account 1 (Ali Hassan, has 50 GRC).
+  2. Student Portal → [5] Transfer GradeCoins.
+  3. Enter account 2's address and amount: 10
+  4. Expected: "✔  Sent 10.0 GRC → 0x..."
+  5. Check balances — account 1 drops by 10, account 2 gains 10.
+
+
+================================================================================
+  PART 4 — COMMITTING TO GITHUB UNDER YOUR NAME
+================================================================================
+
+  STEP 1 — Install Git (if not already installed)
+  ─────────────────────────────────────────────────
+  Download from: https://git-scm.com/download/win
+  Run the installer with all defaults.
+  Restart your terminal after installing.
+
+
+  STEP 2 — Set your name and email (one time only)
+  ──────────────────────────────────────────────────
+      git config --global user.name  "Your Full Name"
+      git config --global user.email "your@email.com"
+
+  This is what appears on your commits on GitHub.
+
+
+  STEP 3 — Create a .gitignore file in your project root
+  ────────────────────────────────────────────────────────
+  Create a file called  .gitignore  with this content:
+
+      venv/
+      __pycache__/
+      *.pyc
+      .env
+      node_modules/
+
+  This stops Git from uploading junk files.
+
+
+  STEP 4 — Initialise Git in your project folder
+  ────────────────────────────────────────────────
+      cd path\to\your\project
+      git init
+      git add .
+      git commit -m "Initial commit — Report Card blockchain app"
+
+
+  STEP 5 — Create a repo on GitHub
+  ──────────────────────────────────
+  1. Go to https://github.com and sign in.
+  2. Click the + button (top right) → New repository.
+  3. Give it a name e.g. "report-card-blockchain"
+  4. Leave it Public or Private (your choice).
+  5. Do NOT tick "Add a README" (you already have files).
+  6. Click Create repository.
+  7. GitHub will show you a URL like:
+       https://github.com/YourUsername/report-card-blockchain.git
+
+
+  STEP 6 — Push your code to GitHub
+  ───────────────────────────────────
+      git remote add origin https://github.com/YourUsername/report-card-blockchain.git
+      git branch -M main
+      git push -u origin main
+
+  GitHub may ask you to sign in — follow the browser pop-up.
+
+
+  STEP 7 — Every time you make changes after that
+  ─────────────────────────────────────────────────
+      git add .
+      git commit -m "Describe what you changed here"
+      git push
+
+  That's all. Your commits will appear under your name on GitHub.
+
+
+================================================================================
+  QUICK REFERENCE — PASSWORDS & ACCOUNTS
+================================================================================
+
+  Admin password (terminal app) : admin123
+  Admin wallet                  : Account 0 (shown at login)
+  Pre-registered students       : Accounts 1, 2, 3, 4
+  Unregistered wallets          : Accounts 5–9
+
+================================================================================
