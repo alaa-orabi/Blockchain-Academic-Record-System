@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ReportCard — Blockchain</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+
+  <!-- ── HEADER ─────────────────────────────────────────────────────────── -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo">
+        <div class="logo-icon">📚</div>
+        ReportCard
+      </div>
+      <span class="badge" id="badge-chain">Chain —</span>
+      <span class="badge" id="badge-block">Block —</span>
+      <span class="badge badge-status" id="badge-paused">Loading…</span>
+    </div>
+    <div class="header-right">
+      <div class="stat-pill">
+        <span class="stat-label">Students</span>
+        <span class="stat-val" id="hdr-students">—</span>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-label">GRC Supply</span>
+        <span class="stat-val" id="hdr-supply">—</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── ACCOUNT BAR ──────────────────────────────────────────────────────── -->
+  <div class="account-bar">
+    <label class="acct-label">Active Wallet</label>
+    <select id="account-select" class="acct-select"></select>
+    <div class="acct-balances">
+      <span id="acct-eth">— ETH</span>
+      <span class="sep">·</span>
+      <span id="acct-grc">— GRC</span>
+    </div>
+    <div class="admin-gate">
+      <input type="password" id="admin-password" placeholder="Admin password…" class="admin-pwd-input" />
+      <button class="btn btn-sm" id="btn-unlock">Unlock Admin</button>
+      <span id="admin-status" class="admin-tag hidden">🔓 Admin Unlocked</span>
+    </div>
+  </div>
+
+  <!-- ── TOAST ────────────────────────────────────────────────────────────── -->
+  <div id="toast" class="toast hidden"></div>
+
+  <!-- ── TABS ─────────────────────────────────────────────────────────────── -->
+  <nav class="tabs">
+    <button class="tab active" data-tab="students">🎓 Students</button>
+    <button class="tab" data-tab="admin">⚙️ Admin Panel</button>
+    <button class="tab" data-tab="wallet">💳 Wallet</button>
+    <button class="tab" data-tab="activity">📡 Activity</button>
+    <button class="tab" data-tab="dashboard">📊 Dashboard</button>
+  </nav>
+
+  <!-- ── MAIN ─────────────────────────────────────────────────────────────── -->
+  <main class="main">
+
+    <!-- ═══ STUDENTS ══════════════════════════════════════════════════════ -->
+    <section id="tab-students" class="tab-content active">
+      <div class="section-header">
+        <h2>All Students</h2>
+        <button class="btn btn-outline btn-sm" id="btn-refresh-students">↺ Refresh</button>
+      </div>
+
+      <div class="card register-card">
+        <h3>✍️ Register on Blockchain</h3>
+        <div class="form-row">
+          <input type="text" id="reg-name" placeholder="Your display name…" class="input" />
+          <button class="btn" id="btn-register">Register Me</button>
+        </div>
+        <p class="hint">Saves your name permanently on-chain using your active wallet. Can only register once per address.</p>
+      </div>
+
+      <div id="students-grid" class="students-grid">
+        <div class="loading">Loading students…</div>
+      </div>
+    </section>
+
+    <!-- ═══ ADMIN ══════════════════════════════════════════════════════════ -->
+    <section id="tab-admin" class="tab-content hidden">
+
+      <div class="section-header">
+        <h2>Admin Panel</h2>
+      </div>
+
+      <div class="admin-grid">
+        <div class="admin-lock-overlay" id="admin-overlay">
+          <div class="lock-box">
+            <span class="lock-icon">🔒</span>
+            <p>Enter the admin password in the bar above and click <strong>Unlock Admin</strong>.</p>
+          </div>
+        </div>
+
+        <!-- Add Grade -->
+        <div class="card">
+          <h3>➕ Add / Update Grade</h3>
+          <div class="form-col">
+            <label>Student Address</label>
+            <input type="text" id="grade-addr" placeholder="0x…" class="input" />
+            <label>Grade (0 – 100)</label>
+            <input type="number" id="grade-val" min="0" max="100" placeholder="85" class="input" />
+            <button class="btn" id="btn-add-grade">Save Grade</button>
+          </div>
+        </div>
+
+        <!-- Mint -->
+        <div class="card">
+          <h3>🪙 Mint GradeCoins</h3>
+          <div class="form-col">
+            <label>Recipient Address</label>
+            <input type="text" id="mint-addr" placeholder="0x…" class="input" />
+            <label>Amount (GRC)</label>
+            <input type="number" id="mint-amount" placeholder="50" class="input" />
+            <button class="btn" id="btn-mint">Mint GRC</button>
+          </div>
+        </div>
+
+        <!-- Emergency stop -->
+        <div class="card">
+          <h3>⛔ Emergency Stop</h3>
+          <p class="hint">Pausing blocks all student-facing actions. Resume to restore access.</p>
+          <div class="pause-status active" id="pause-status-text">Checking…</div>
+          <div class="btn-row">
+            <button class="btn btn-danger"  id="btn-pause">Pause</button>
+            <button class="btn btn-success" id="btn-resume">Resume</button>
+          </div>
+        </div>
+
+        <!-- Transfer ownership -->
+        <div class="card">
+          <h3>🔑 Transfer Ownership</h3>
+          <p class="hint">Irreversible. The new address becomes admin on both contracts.</p>
+          <div class="form-col" style="margin-top:14px">
+            <label>New Admin Address</label>
+            <input type="text" id="new-admin-addr" placeholder="0x…" class="input" />
+            <button class="btn btn-danger" id="btn-transfer-owner">Transfer Ownership</button>
+          </div>
+        </div>
+
+        <!-- Batch grades -->
+        <div class="card card-wide">
+          <h3>📋 Batch Add Grades</h3>
+          <p class="hint" style="margin-bottom:16px">Add one row per student then submit all at once in a single transaction.</p>
+          <div id="batch-rows">
+            <div class="batch-row">
+              <input type="text"   placeholder="0x address…" class="input batch-addr" />
+              <input type="number" placeholder="grade" min="0" max="100" class="input batch-grade" style="width:96px" />
+              <button class="btn btn-sm btn-outline btn-remove-row">✕</button>
+            </div>
+          </div>
+          <div class="btn-row" style="margin-top:14px">
+            <button class="btn btn-outline btn-sm" id="btn-add-batch-row">+ Add Row</button>
+            <button class="btn" id="btn-submit-batch">Submit Batch</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ═══ WALLET ════════════════════════════════════════════════════════ -->
+    <section id="tab-wallet" class="tab-content hidden">
+      <div class="section-header"><h2>Wallet & Balances</h2></div>
+
+      <div class="card">
+        <h3>🔍 Check Any Address</h3>
+        <div class="form-row">
+          <input type="text" id="check-addr" placeholder="0x…" class="input" />
+          <button class="btn" id="btn-check-balance">Check</button>
+        </div>
+        <div id="balance-result" class="balance-result hidden">
+          <div class="balance-row">
+            <span class="bal-label">Ether (ETH)</span>
+            <span class="bal-val" id="res-eth">—</span>
+          </div>
+          <div class="balance-row">
+            <span class="bal-label">GradeCoin (GRC)</span>
+            <span class="bal-val" id="res-grc">—</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>💸 Transfer GradeCoins</h3>
+        <div class="form-col">
+          <label>Recipient Address</label>
+          <input type="text" id="transfer-to" placeholder="0x…" class="input" />
+          <label>Amount (GRC)</label>
+          <input type="number" id="transfer-amount" placeholder="10" class="input" />
+          <button class="btn" id="btn-transfer-coins">Send GRC</button>
+        </div>
+      </div>
+
+      <div class="card card-wide">
+        <h3>📊 All Account Balances</h3>
+        <button class="btn btn-outline btn-sm" id="btn-refresh-accounts" style="margin-bottom:18px">↺ Refresh</button>
+        <div id="accounts-table"></div>
+      </div>
+    </section>
+
+    <!-- ═══ ACTIVITY ══════════════════════════════════════════════════════ -->
+    <section id="tab-activity" class="tab-content hidden">
+      <div class="section-header"><h2>Activity History</h2></div>
+      <div class="card">
+        <h3>📡 Scan On-Chain Activity</h3>
+        <div class="form-row">
+          <input type="text" id="activity-addr" placeholder="Enter address — or leave blank for active wallet" class="input" />
+          <button class="btn" id="btn-load-activity">Scan Chain</button>
+        </div>
+        <div id="activity-table" class="activity-table"></div>
+      </div>
+    </section>
+
+    <!-- ═══ DASHBOARD ═════════════════════════════════════════════════════ -->
+    <section id="tab-dashboard" class="tab-content hidden">
+      <div class="section-header">
+        <h2>Dashboard</h2>
+        <button class="btn btn-outline btn-sm" id="btn-refresh-dashboard">↺ Refresh</button>
+      </div>
+      <div id="dashboard-content">
+        <div class="loading">Scanning blockchain…</div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
