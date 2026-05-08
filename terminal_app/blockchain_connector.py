@@ -14,7 +14,7 @@ from web3.exceptions import ContractLogicError
 BASE_DIR   = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SHARED_DIR = os.path.join(BASE_DIR, "shared")
 
-GANACHE_URL = "http://127.0.0.1:8545"
+GANACHE_URL = "http://127.0.0.1:7545"
 
 # ── Connect ───────────────────────────────────────────────────────────────────
 

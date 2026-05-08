@@ -12,7 +12,7 @@ with open("shared/contract_address.json") as f:
 with open("shared/abis/ReportCard_abi.json") as f:
     report_abi = json.load(f)
 
-with open("shared/abis/GradeToken_abi.json") as f:
+with open("shared/abis/GradeCoin_abi.json") as f:
     token_abi = json.load(f)
 
 # Initialize contracts
@@ -21,7 +21,7 @@ report = web3.eth.contract(
     abi=report_abi
 )
 token = web3.eth.contract(
-    address=addresses["GradeToken"],
+    address=addresses["GradeCoin"],
     abi=token_abi
 )
 

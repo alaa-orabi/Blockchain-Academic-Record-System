@@ -39,7 +39,7 @@ while True:
         )
 
         for event in events:
-            student = event['args']['student']
+            student = event['args']['studentAddress']
             grade   = event['args']['grade']
             print(f"\nALERT: A grade change just happened!")
             print(f"  Student : {student}")

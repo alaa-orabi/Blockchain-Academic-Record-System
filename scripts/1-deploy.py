@@ -5,7 +5,7 @@ from solcx import compile_source, install_solc
 
 install_solc("0.8.0")
 
-GANACHE_URL = "http://127.0.0.1:8545"
+GANACHE_URL = "http://127.0.0.1:7545"
 w3 = Web3(Web3.HTTPProvider(GANACHE_URL))
 
 if not w3.is_connected():
