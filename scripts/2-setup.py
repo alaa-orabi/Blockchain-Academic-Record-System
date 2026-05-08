@@ -12,12 +12,19 @@ BASE_DIR   = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SHARED_DIR = os.path.join(BASE_DIR, "shared")
 
 def load_json(filename):
-    with open(os.path.join(SHARED_DIR, filename)) as f:
+    # Try the root shared folder first
+    path = os.path.join(SHARED_DIR, filename)
+    
+    # If not found, check the abis subfolder
+    if not os.path.exists(path):
+        path = os.path.join(SHARED_DIR, "abis", filename)
+        
+    with open(path) as f:
         return json.load(f)
 
 addresses    = load_json("contract_address.json")
-rc_abi       = load_json("ReportCard_abi.json")
-gc_abi       = load_json("GradeCoin_abi.json")
+rc_abi       = load_json(os.path.join("abis", "ReportCard_abi.json"))
+gc_abi       = load_json(os.path.join("abis", "GradeCoin_abi.json"))
 
 admin_address = addresses["admin"]
 rc_contract   = w3.eth.contract(address=addresses["ReportCard"], abi=rc_abi)

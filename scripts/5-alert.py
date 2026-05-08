@@ -1,8 +1,17 @@
 import json
 import time
+import os
+import signal
 from web3 import Web3
 
-# Connect to Ganache
+# Handle CTRL+C cleanly
+def stop_handler(signum, frame):
+    print("\n[INFO] Alert system stopped. Goodbye!")
+    os._exit(0)
+
+signal.signal(signal.SIGINT, stop_handler)
+
+# Connect to Ganache (NO trailing space after 7545!)
 web3 = Web3(Web3.HTTPProvider("http://127.0.0.1:7545"))
 
 # Load addresses and ABI
@@ -24,18 +33,16 @@ print("  Waiting for grade changes...")
 print("  (Press CTRL+C to stop)")
 print("=" * 45)
 
-# Start from current block
 last_block = web3.eth.block_number
 
-# Infinite polling loop
 while True:
     current_block = web3.eth.block_number
 
     if current_block > last_block:
-        # Check for new GradeRecorded events
+        # FIXED: web3.py v6 uses snake_case: from_block / to_block
         events = report.events.GradeRecorded.get_logs(
-            fromBlock=last_block + 1,
-            toBlock=current_block
+            from_block=last_block + 1,
+            to_block=current_block
         )
 
         for event in events:
