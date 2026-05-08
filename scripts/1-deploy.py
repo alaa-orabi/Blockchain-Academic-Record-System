@@ -72,17 +72,17 @@ addresses = {
     "admin":      admin_account,
 }
 
-with open(os.path.join(SHARED_DIR, "contract_address.json"), "w") as f:   # ← unchanged
+with open(os.path.join(SHARED_DIR, "contract_address.json"), "w") as f:   
     json.dump(addresses, f, indent=2)
 
-with open(os.path.join(ABIS_DIR, "ReportCard_abi.json"), "w") as f:       # ← CHANGED
+with open(os.path.join(ABIS_DIR, "ReportCard_abi.json"), "w") as f:      
     json.dump(rc_abi, f, indent=2)
 
-with open(os.path.join(ABIS_DIR, "GradeCoin_abi.json"), "w") as f:        # ← CHANGED
+with open(os.path.join(ABIS_DIR, "GradeCoin_abi.json"), "w") as f:        
     json.dump(gc_abi, f, indent=2)
 
 print("\n── shared/ folder updated ──────────────────────────────")
 print("  contract_address.json")
-print("  abis/ReportCard_abi.json")   # ← CHANGED
-print("  abis/GradeCoin_abi.json")    # ← CHANGED
+print("  abis/ReportCard_abi.json")   
+print("  abis/GradeCoin_abi.json")    
 print("\nDeployment complete! The team can now run their scripts.")
