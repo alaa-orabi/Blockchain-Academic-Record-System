@@ -49,8 +49,8 @@ def load_contracts(w3: Web3):
     gc  = GradeCoin  contract
     """
     addresses = _load_json("contract_address.json")
-    rc_abi    = _load_json("ReportCard_abi.json")
-    gc_abi    = _load_json("GradeCoin_abi.json")
+    rc_abi    = _load_json("abis/ReportCard_abi.json")
+    gc_abi    = _load_json("abis/GradeCoin_abi.json")
 
     rc = w3.eth.contract(address=addresses["ReportCard"], abi=rc_abi)
     gc = w3.eth.contract(address=addresses["GradeCoin"],  abi=gc_abi)
