@@ -20,7 +20,9 @@ print(f"Admin (deployer): {admin_account}\n")
 BASE_DIR      = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CONTRACTS_DIR = os.path.join(BASE_DIR, "contracts")
 SHARED_DIR    = os.path.join(BASE_DIR, "shared")
+ABIS_DIR      = os.path.join(SHARED_DIR, "abis")   
 os.makedirs(SHARED_DIR, exist_ok=True)
+os.makedirs(ABIS_DIR,   exist_ok=True)              
 
 def compile_contract(filename):
     """Read a Solidity file and return its ABI + bytecode."""
@@ -28,7 +30,6 @@ def compile_contract(filename):
     with open(filepath, "r", encoding="utf-8") as f:
         source = f.read()
 
-    
     contract_name = filename.replace(".sol", "")
 
     compiled = compile_source(
@@ -37,8 +38,7 @@ def compile_contract(filename):
         solc_version="0.8.0",
     )
 
-    
-    key = f"<stdin>:{contract_name}"
+    key      = f"<stdin>:{contract_name}"
     abi      = compiled[key]["abi"]
     bytecode = compiled[key]["bin"]
     return abi, bytecode
@@ -72,17 +72,17 @@ addresses = {
     "admin":      admin_account,
 }
 
-with open(os.path.join(SHARED_DIR, "contract_address.json"), "w") as f:
+with open(os.path.join(SHARED_DIR, "contract_address.json"), "w") as f:   # ← unchanged
     json.dump(addresses, f, indent=2)
 
-with open(os.path.join(SHARED_DIR, "ReportCard_abi.json"), "w") as f:
+with open(os.path.join(ABIS_DIR, "ReportCard_abi.json"), "w") as f:       # ← CHANGED
     json.dump(rc_abi, f, indent=2)
 
-with open(os.path.join(SHARED_DIR, "GradeCoin_abi.json"), "w") as f:
+with open(os.path.join(ABIS_DIR, "GradeCoin_abi.json"), "w") as f:        # ← CHANGED
     json.dump(gc_abi, f, indent=2)
 
 print("\n── shared/ folder updated ──────────────────────────────")
 print("  contract_address.json")
-print("  ReportCard_abi.json")
-print("  GradeCoin_abi.json")
+print("  abis/ReportCard_abi.json")   # ← CHANGED
+print("  abis/GradeCoin_abi.json")    # ← CHANGED
 print("\nDeployment complete! The team can now run their scripts.")
