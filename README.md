@@ -1,4 +1,4 @@
-# 🎓 Blockchain Academic Record System
+#  Blockchain Academic Record System
 
 ## Overview
 
@@ -139,7 +139,7 @@ contract = w3.eth.contract(address=address, abi=abi)
 
 ---
 
-## 🚀 How to Run
+##  How to Run
 
 ### 1. Install dependencies
 ```bash
@@ -214,11 +214,11 @@ python scripts/6-export_csv.py
 
 ---
 
-## 👨‍💻 Team Members & File Ownership
+##  Team Members & File Ownership
 
 | Member | Role | Files Owned |
 |---|---|---|
-| Alaa Orabi | Backend Solidity Dev | `contracts/ReportCard.sol` |
+| Alaa Orabi | Backend Solidity Dev | `contracts/ReportCard.sol` |GitHub Repository Management & Project Structure |
 | Walaa Omar | Coin & Advanced Contract Dev | `contracts/GradeCoin.sol` |
 | Ahmed Sameh | Deployment Engineer | `scripts/1-deploy.py`, `scripts/2-setup.py`, `shared/` |
 | Mahmoud Sayed | Terminal App Developer | `terminal_app/main.py`, `terminal_app/blockchain_connector.py`, `terminal_app/student_menu.py`, `terminal_app/admin_menu.py` |
@@ -226,7 +226,7 @@ python scripts/6-export_csv.py
 
 ---
 
-## 📌 Conclusion
+##  Conclusion
 
 This project demonstrates the power of blockchain technology in education systems by ensuring **secure, transparent, and immutable** academic records. It eliminates trust issues and provides a decentralized alternative to traditional centralized databases.
 
