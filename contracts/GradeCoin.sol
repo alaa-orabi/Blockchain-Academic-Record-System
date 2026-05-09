@@ -4,7 +4,12 @@ pragma solidity ^0.8.0;
 contract GradeCoin {
 
    
-    string public name     = "GradeCoin";
+    string public name   
+    
+    
+    
+    
+      = "GradeCoin";
     string public symbol   = "GRC";
     uint8  public decimals = 18;
     uint256 public totalSupply;

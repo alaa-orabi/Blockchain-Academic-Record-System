@@ -34,8 +34,8 @@ while True:
     if current_block > last_block:
         # Check for new GradeRecorded events
         events = report.events.GradeRecorded.get_logs(
-            fromBlock=last_block + 1,
-            toBlock=current_block
+            from_block=last_block + 1,
+            to_block=current_block
         )
 
         for event in events:

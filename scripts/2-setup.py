@@ -16,8 +16,8 @@ def load_json(filename):
         return json.load(f)
 
 addresses    = load_json("contract_address.json")
-rc_abi       = load_json("ReportCard_abi.json")
-gc_abi       = load_json("GradeCoin_abi.json")
+rc_abi       = load_json("abis/ReportCard_abi.json")
+gc_abi       = load_json("abis/GradeCoin_abi.json")
 
 admin_address = addresses["admin"]
 rc_contract   = w3.eth.contract(address=addresses["ReportCard"], abi=rc_abi)
