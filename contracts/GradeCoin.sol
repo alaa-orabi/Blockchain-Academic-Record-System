@@ -6,9 +6,6 @@ contract GradeCoin {
    
     string public name   
     
-    
-    
-    
       = "GradeCoin";
     string public symbol   = "GRC";
     uint8  public decimals = 18;
